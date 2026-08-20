@@ -342,6 +342,11 @@
   .dot-mono{background:linear-gradient(135deg,#111 50%, #fff 50%);}
   .dot-classic{background:linear-gradient(135deg,#8a5a12 50%, #f0b93d 50%);}
   .dot-rainbow{background:conic-gradient(#F87171,#FB923C,#FBBF24,#34D399,#60A5FA,#A78BFA,#F472B6);}
+  .dot-spring{background:linear-gradient(135deg,#f6a8c7 50%, #a8e6c3 50%);}
+  .dot-autumn{background:linear-gradient(135deg,#8b4513 50%, #e3a857 50%);}
+  .dot-winter{background:linear-gradient(135deg,#1b3a5c 50%, #d6e9f5 50%);}
+  .dot-kraft{background:linear-gradient(135deg,#6b4a32 50%, #c99b6c 50%);}
+  .dot-neon{background:linear-gradient(135deg,#ff2d75 50%, #00e5ff 50%);}
 
   /* ---- 테마별 카드 색상 ---- */
   body.theme-pastel .card{border-color:#f0d9c9;}
@@ -371,6 +376,36 @@
   body.theme-rainbow .card th:nth-child(6){background:#60A5FA;color:#fff;}
   body.theme-rainbow .card th:nth-child(7){background:#A78BFA;color:#fff;}
   body.theme-rainbow .card th:nth-child(8){background:#F472B6;color:#fff;}
+
+  body.theme-spring .card{border-color:#f3c7db;}
+  body.theme-spring .card .card-head{background:#f6a8c7; color:#5c1a35;}
+  body.theme-spring .card th{background:#a8e6c3; color:#1f6b46;}
+  body.theme-spring .card td.pnum{background:#eaf9f0; color:#1f6b46;}
+  body.theme-spring .card td{border-color:#dcefe3;}
+
+  body.theme-autumn .card{border-color:#c98f4a;}
+  body.theme-autumn .card .card-head{background:#8b4513; color:#fce9cf;}
+  body.theme-autumn .card th{background:#e3a857; color:#4a2c06;}
+  body.theme-autumn .card td.pnum{background:#f6e3c5; color:#4a2c06;}
+  body.theme-autumn .card td{border-color:#e8d2ac;}
+
+  body.theme-winter .card{border-color:#a9c9de;}
+  body.theme-winter .card .card-head{background:#1b3a5c; color:#eaf5fc;}
+  body.theme-winter .card th{background:#d6e9f5; color:#1b3a5c;}
+  body.theme-winter .card td.pnum{background:#eff7fc; color:#1b3a5c;}
+  body.theme-winter .card td{border-color:#cfe3f0;}
+
+  body.theme-kraft .card{border-color:#a9825a;}
+  body.theme-kraft .card .card-head{background:#6b4a32; color:#fce9cf;}
+  body.theme-kraft .card th{background:#c99b6c; color:#3a2412;}
+  body.theme-kraft .card td.pnum{background:#ebd9c0; color:#3a2412;}
+  body.theme-kraft .card td{border-color:#d8bfa0;}
+
+  body.theme-neon .card{border-color:#111;}
+  body.theme-neon .card .card-head{background:#ff2d75; color:#fff;}
+  body.theme-neon .card th{background:#00e5ff; color:#00223a;}
+  body.theme-neon .card td.pnum{background:#ffd400; color:#1a1a1a; font-weight:900;}
+  body.theme-neon .card td{border-color:#111;}
 
   @media print{
     header.top, .panel.left, .preview-toolbar{display:none !important;}
@@ -420,7 +455,7 @@
     <section class="block">
       <h2>2. 시간표 붙여넣기</h2>
       <p class="hint">
-        <b>엑셀·구글시트·나이스 화면에서 표를 드래그해 복사</b>한 다음 아래에 붙여넣으면(Ctrl+V) 표 구조를 자동으로 인식해 바로 반영돼요.<br>
+        <b>엑셀·구글시트·나이스·한글(HWP) 화면에서 표를 드래그해 복사</b>한 다음 아래에 붙여넣으면(Ctrl+V) 표 구조를 자동으로 인식해 바로 반영돼요.<br>
         직접 타이핑할 땐 칸을 <b>과목/교사</b> 형식(예: 과학/김민준)으로 쓰고, 탭으로 요일을 · 줄바꿈으로 교시를 구분한 뒤 아래 버튼을 눌러주세요.
       </p>
       <textarea id="pasteBox" placeholder="여기에 표를 붙여넣으세요 (Ctrl+V)
@@ -480,6 +515,21 @@
         </button>
         <button type="button" class="theme-swatch" data-theme="rainbow" onclick="setTheme('rainbow', this)">
           <span class="dot dot-rainbow"></span>무지개
+        </button>
+        <button type="button" class="theme-swatch" data-theme="spring" onclick="setTheme('spring', this)">
+          <span class="dot dot-spring"></span>봄
+        </button>
+        <button type="button" class="theme-swatch" data-theme="autumn" onclick="setTheme('autumn', this)">
+          <span class="dot dot-autumn"></span>가을
+        </button>
+        <button type="button" class="theme-swatch" data-theme="winter" onclick="setTheme('winter', this)">
+          <span class="dot dot-winter"></span>겨울
+        </button>
+        <button type="button" class="theme-swatch" data-theme="kraft" onclick="setTheme('kraft', this)">
+          <span class="dot dot-kraft"></span>크래프트
+        </button>
+        <button type="button" class="theme-swatch" data-theme="neon" onclick="setTheme('neon', this)">
+          <span class="dot dot-neon"></span>네온팝
         </button>
       </div>
     </section>
@@ -593,7 +643,7 @@ function showToast(msg){
   t._hideTimer = setTimeout(()=>{ t.style.opacity = '0'; }, 2400);
 }
 
-// 엑셀/구글시트/나이스에서 표를 복사해 붙여넣으면 클립보드에 함께 담기는
+// 엑셀/구글시트/나이스/한글(HWP)에서 표를 복사해 붙여넣으면 클립보드에 함께 담기는
 // HTML 표 구조를 그대로 읽어서, 형식(과목/교사)을 안 맞춰도 자동으로 반영한다.
 function importFromClipboardHtml(html){
   try{
