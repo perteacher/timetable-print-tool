@@ -407,6 +407,46 @@
   body.theme-neon .card td.pnum{background:#ffd400; color:#1a1a1a; font-weight:900;}
   body.theme-neon .card td{border-color:#111;}
 
+  /* ---- 커스텀 테마 (색상 직접 지정) ---- */
+  body.theme-custom .card{border-color:var(--custom-border, #d8d3c8);}
+  body.theme-custom .card .card-head{
+    background:var(--custom-head-bg, #0f6f62);
+    color:var(--custom-head-text, #ffffff);
+  }
+  body.theme-custom .card th{
+    background:var(--custom-th-bg, #f3bd4a);
+    color:var(--custom-th-text, #1c2321);
+  }
+  body.theme-custom .card td.pnum{
+    background:var(--custom-pnum-bg, #faf1d9);
+    color:var(--custom-th-text, #1c2321);
+  }
+  .dot-custom{
+    background:conic-gradient(from 180deg, #F87171, #FBBF24, #34D399, #60A5FA, #A78BFA, #F87171);
+    position:relative;
+  }
+  .dot-custom::after{
+    content:"+";
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:13px; font-weight:900;
+    text-shadow:0 0 2px rgba(0,0,0,.6);
+  }
+  #customColorPanel{
+    margin-top:12px;
+    padding:12px;
+    background:#f5f4ef;
+    border-radius:8px;
+    display:none;
+  }
+  #customColorPanel .row{margin-bottom:8px;}
+  #customColorPanel .row:last-child{margin-bottom:0;}
+  #customColorPanel label{min-width:70px; font-size:12.5px; color:var(--muted);}
+  #customColorPanel input[type=color]{
+    width:40px; height:30px; padding:2px;
+    border:1.5px solid var(--line); border-radius:6px; cursor:pointer;
+  }
+
   @media print{
     header.top, .panel.left, .preview-toolbar{display:none !important;}
     body{background:#fff !important;}
@@ -531,6 +571,17 @@
         <button type="button" class="theme-swatch" data-theme="neon" onclick="setTheme('neon', this)">
           <span class="dot dot-neon"></span>네온팝
         </button>
+        <button type="button" class="theme-swatch" data-theme="custom" onclick="setTheme('custom', this)">
+          <span class="dot dot-custom"></span>커스텀
+        </button>
+      </div>
+      <div id="customColorPanel">
+        <div class="row">
+          <label>헤더 색</label>
+          <input type="color" id="customHead" value="#0f6f62" oninput="applyCustomColors()">
+          <label style="margin-left:14px;">포인트 색</label>
+          <input type="color" id="customTh" value="#f3bd4a" oninput="applyCustomColors()">
+        </div>
       </div>
     </section>
 
@@ -847,6 +898,47 @@ function setTheme(name, btn){
   document.body.className = 'theme-' + name;
   document.querySelectorAll('.theme-swatch').forEach(b => b.classList.remove('active'));
   if(btn) btn.classList.add('active');
+  const panel = document.getElementById('customColorPanel');
+  if(name === 'custom'){
+    panel.style.display = 'block';
+    applyCustomColors();
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+function hexToRgb(hex){
+  const h = hex.replace('#','');
+  return {
+    r: parseInt(h.substring(0,2),16),
+    g: parseInt(h.substring(2,4),16),
+    b: parseInt(h.substring(4,6),16)
+  };
+}
+function rgbToHex(r,g,b){
+  const c = v => Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0');
+  return '#'+c(r)+c(g)+c(b);
+}
+function lightenHex(hex, amt){
+  const {r,g,b} = hexToRgb(hex);
+  return rgbToHex(r+(255-r)*amt, g+(255-g)*amt, b+(255-b)*amt);
+}
+// 배경색 밝기에 따라 검정/흰색 중 더 잘 보이는 글자색을 고른다
+function contrastText(hex){
+  const {r,g,b} = hexToRgb(hex);
+  const brightness = (r*299 + g*587 + b*114) / 1000;
+  return brightness > 150 ? '#1c2321' : '#ffffff';
+}
+
+function applyCustomColors(){
+  const head = document.getElementById('customHead').value;
+  const th = document.getElementById('customTh').value;
+  document.body.style.setProperty('--custom-head-bg', head);
+  document.body.style.setProperty('--custom-head-text', contrastText(head));
+  document.body.style.setProperty('--custom-th-bg', th);
+  document.body.style.setProperty('--custom-th-text', contrastText(th));
+  document.body.style.setProperty('--custom-pnum-bg', lightenHex(th, 0.82));
+  document.body.style.setProperty('--custom-border', lightenHex(th, 0.55));
 }
 
 function escapeHtml(str){
